@@ -1,3 +1,6 @@
+//Федоров Антон Сергеевич М8О-207Б-19
+//вариант 30: фигура - 5-ти угольник, контейнер - динамический массив, аллокатор - список
+
 #include <iostream>
 #include <memory>
 #include <functional>
@@ -37,14 +40,17 @@ public:
             for (int i = 0; i < BLOCK_SIZE; ++i) {
                 list.push_back(&buffer[i]);
             }
+            std::cout << list.size() << " memory blocks left" << "\n";
         }
         if (quantity > list.size()){
+            std::cout << list.size() << " memory blocks left" << "\n";
             throw (std::bad_alloc());
         } else {
             T* ticket = list.front();
             for (int i = 0; i < quantity; ++i){
                 list.pop_front();
             }
+            std::cout << list.size() << " memory blocks left" << "\n";
             return ticket;
         }
     }

@@ -1,4 +1,5 @@
-//вариант 30 5-ти угольник, контейнер - динамический массив, аллокатор - список
+//Федоров Антон Сергеевич М8О-207Б-19
+//вариант 30: фигура - 5-ти угольник, контейнер - динамический массив, аллокатор - список
 
 #include <algorithm>
 #include "Pentagon.h"
@@ -7,7 +8,7 @@
 #include "Allocator.h"
 
 int main() {
-    TVector<Pentagon, Allocator<Pentagon, 20>> arr;
+    TVector<Pentagon, Allocator<Pentagon, 8>> arr;
     char function;
     while (std::cin >> function){
         try{
