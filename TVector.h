@@ -13,17 +13,18 @@ private:
         static allocator_type allocator;
         return allocator;
     }
+    struct deleter{
+        void operator() (void* ptr){
+            get_allocator().deallocate((T*)ptr, 1);
+        }
+    };
+    deleter del;
 public:
     TVector();
     unsigned long long Size();
     void PushBack(const T elem);
     void PopBack();
     T& operator[] (long long iterator);
-    struct deleter{
-        void operator() (void* ptr){
-            get_allocator().deallocate((T*)ptr, 1);
-        }
-    };
     class ForwardIterator{
     private:
         std::shared_ptr<T[]> Iterator;
@@ -81,11 +82,11 @@ void TVector<T, ALLOCATOR>::PushBack(const T elem){
     if (TVectorCapacity == 0){
         TVectorCapacity = 1;
         TVectorSize = 0;
-        Data = std::move(std::unique_ptr<T[]>{new(this -> get_allocator().allocate(TVectorCapacity)) T[TVectorCapacity]});
+        Data = std::move(std::unique_ptr<T[], deleter>{new(this -> get_allocator().allocate(TVectorCapacity)) T[TVectorCapacity]});
     }
     else if (TVectorCapacity == TVectorSize){
         TVectorCapacity *= 2;
-        std::shared_ptr<T[]> newData{new(this -> get_allocator().allocate(TVectorCapacity)) T[TVectorCapacity]};
+        std::shared_ptr<T[]> newData{new(this -> get_allocator().allocate(TVectorCapacity)) T[TVectorCapacity], deleter()};
         for (unsigned long long i = 0; i < TVectorSize; ++i){
             newData[i] = Data[i];
         }
@@ -100,7 +101,7 @@ void TVector<T, ALLOCATOR>::PopBack() {
         --TVectorSize;
         if (TVectorSize < TVectorCapacity / 2){
             TVectorCapacity /= 2;
-            std::shared_ptr<T[]> newData(new(this -> get_allocator().allocate(TVectorCapacity)) T[TVectorCapacity]);
+            std::shared_ptr<T[]> newData(new(this -> get_allocator().allocate(TVectorCapacity)) T[TVectorCapacity], deleter());
             for (unsigned long long i = 0; i < TVectorSize; ++i){
                 newData[i] = Data[i];
             }
